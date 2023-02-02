@@ -1,0 +1,25 @@
+#uses the tutorial here https://medium.com/ml-cheat-sheet/neural-networks-how-to-build-a-cat-classifier-from-scratch-7e8b78c4de2e
+
+import h5py
+import numpy as np
+
+#load in the data, default is the cats
+def load_dataset(train_images = 'datasets/train_catvnoncat.h5', test_images = 'datasets/test_catvnoncat.h5'):
+    train_dataset = h5py.File(train_images, 'r') #create h5 File objects
+    test_dataset = h5py.File(test_images, 'r')
+
+    x_train = np.array(train_dataset["train_set_x"][:]) #load the image data into an array
+    x_test = np.array(test_dataset["test_set_x"][:])
+
+    y_train = np.array(train_dataset["train_set_y"][:])
+    y_test = np.array(test_dataset["train_set_x"][:])
+
+    classes = np.array(test_dataset["list_classes"][:]) #create array for the classes (cat or not)
+
+    y_train = y_train.reshape((1, y_train.shape[0]))
+    y_test = y_test.reshape((1, y_test.shape[0])) #turning the 2d array into a 1d vector (unrolling)
+
+    return x_train, y_train, x_test, y_test, classes
+
+x_train, y_train, x_test, y_test, classes = load_dataset() #using default
+
