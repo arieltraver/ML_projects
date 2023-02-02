@@ -17,9 +17,34 @@ def load_dataset(train_images = 'datasets/train_catvnoncat.h5', test_images = 'd
     classes = np.array(test_dataset["list_classes"][:]) #create array for the classes (cat or not)
 
     y_train = y_train.reshape((1, y_train.shape[0]))
-    y_test = y_test.reshape((1, y_test.shape[0])) #turning the 2d array into a 1d vector (unrolling)
+    y_test = y_test.reshape((1, y_test.shape[0]))
 
     return x_train, y_train, x_test, y_test, classes
 
+def preprocess(x_train, x_test):
+    x_train_flat = x_train.reshape(x_train.shape[0], -1).T #unroll data into a 1d vector
+    x_test_flat = x_test.reshape(x_test.shape[0], -1).T
+    train_set_x = x_train_flat / 255 #divide by the maximum value of a pixel channel
+    test_set_x = y_test_flat / 255
+    return train_set_x, test_set_x
+
+
 x_train, y_train, x_test, y_test, classes = load_dataset() #using default
+train_set_x, test_set_x = preprocess(x_train, x_test)
+
+def sigmoid(arr):
+    """
+    sigmoid activation function
+    result is between 0 and 1
+    args:
+    ---arr: scalar or numpy array
+    """
+    sig = 1 / (1 + np.exp(-arr)) #numpy exp acts on the entire array
+    return sig
+
+
+
+
+
+
 
