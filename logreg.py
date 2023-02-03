@@ -13,7 +13,7 @@ def load_dataset(train_images = 'datasets/train_catvnoncat.h5', test_images = 'd
     x_test = np.array(test_dataset["test_set_x"][:])
 
     y_train = np.array(train_dataset["train_set_y"][:])
-    y_test = np.array(test_dataset["train_set_x"][:])
+    y_test = np.array(test_dataset["test_set_y"][:])
 
     classes = np.array(test_dataset["list_classes"][:]) #create array for the classes (cat or not)
 
@@ -26,7 +26,7 @@ def preprocess(x_train, x_test):
     x_train_flat = x_train.reshape(x_train.shape[0], -1).T #unroll data into a 1d vector
     x_test_flat = x_test.reshape(x_test.shape[0], -1).T
     train_set_x = x_train_flat / 255 #divide by the maximum value of a pixel channel
-    test_set_x = y_test_flat / 255
+    test_set_x = x_test_flat / 255
     return train_set_x, test_set_x
 
 
