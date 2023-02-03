@@ -50,4 +50,33 @@ def initialize_w_zeroes(dim): #for most networks you would init with random valu
     assert(isinstance(b, float) or isinstance(b, int)) #i don't like python.
     return zeroes, b
 
+def log_cost(A, labelY, m_shape):
+    return -1 / m_shape * np.sum(labelY * np.log(A) + (1 - labelY) * np.log(1 - A), axis=1, keepdims = True)
+
+
+#build a function which computes the cost function AND its gradient.
+def propagate(weights, bias, dataX, labelY, cost_fn):
+    '''
+    returns:
+    --- cost
+    --- dw: gradient with respepct to weights
+    --- db: gradient with respect to bias
+    '''
+    m_shape = dataX.shape[1] #get the array dimensions
+    A = sigmoid(np.dot(weights.T, dataX) + bias) #compute sigmoid of the weights * all the pixels, plus bias
+    cost = cost_fn(A, labelY, m_shape)
+
+    dw = 1 / m_shape * np.dot(dataX, (A - labelY).T) #derivative(gradient vector) of sigmoid with respect to weights
+    db = 1 / m_shape * np.sum(A - labelY) #derivative(gradient vector) of sigmoid with respect to bias
+
+    gradients = {"dw": dw, "db": db} #a dictionary?
+
+    return gradients, cost
+
+
+
+
+
+
+
 
