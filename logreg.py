@@ -1,3 +1,4 @@
+#!./bin/python
 #uses the tutorial here https://medium.com/ml-cheat-sheet/neural-networks-how-to-build-a-cat-classifier-from-scratch-7e8b78c4de2e
 
 import h5py
