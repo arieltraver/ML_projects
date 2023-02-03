@@ -69,14 +69,31 @@ def propagate(weights, bias, dataX, labelY, cost_fn):
     dw = 1 / m_shape * np.dot(dataX, (A - labelY).T) #derivative(gradient vector) of sigmoid with respect to weights
     db = 1 / m_shape * np.sum(A - labelY) #derivative(gradient vector) of sigmoid with respect to bias
 
-    gradients = {"dw": dw, "db": db} #a dictionary?
-
-    return gradients, cost
+    return dw, db, cost
 
 
+def optimize(weights, bias, dataX, dataY, num_iterations, cost_fn, step_size, print_steps = 0):
+    '''
+    optimizes weights according to what parameters you set.
+    ---num_iterations: how many steps should be performed
+    ---step_size: how far in the gradient direction do we go with each step
+    ---print_steps: if greater than 0, print the cost for every print_steps steps
+    '''
+    costs = []
+    for i in range(num_iterations):
+        dw, db, cost = propagate(weights, bias, dataX, dataY, cost_fn)
+        weights -= step_size * dw
+        bias -= step_size * db
+        costs.append(cost)
 
+        if (print_steps > 0 and i % print_steps == 0):
+            print(f"step {i}: {cost}")
+        
+    return weights, bias, dw, db, cost
 
-
+    
+        
+        
 
 
 
