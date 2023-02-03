@@ -29,10 +29,6 @@ def preprocess(x_train, x_test):
     test_set_x = x_test_flat / 255
     return train_set_x, test_set_x
 
-
-x_train, y_train, x_test, y_test, classes = load_dataset() #using default
-train_set_x, test_set_x = preprocess(x_train, x_test)
-
 def sigmoid(arr):
     """
     sigmoid activation function
@@ -82,18 +78,50 @@ def optimize(weights, bias, dataX, dataY, num_iterations, cost_fn, step_size, pr
     costs = []
     for i in range(num_iterations):
         dw, db, cost = propagate(weights, bias, dataX, dataY, cost_fn)
-        weights -= step_size * dw
-        bias -= step_size * db
-        costs.append(cost)
+        weights -= step_size * dw #apply the gradient to the weights
+        bias -= step_size * db #apply the gradient to the bias
+        costs.append(cost) #keep track for later use
 
         if (print_steps > 0 and i % print_steps == 0):
             print(f"step {i}: {cost}")
         
     return weights, bias, dw, db, cost
 
-    
-        
-        
+
+
+def predict(w, b, dataX):
+    '''
+    use the logistic regression to classify an image
+    '''
+    m = dataX.shape[1]
+    Y_prediction = np.zeros()
+    weights = weights.reshape(dataX.shape[0], 1) #reshape for application
+
+    A = sigmoid(np.dot(weights.T, dataX) + b) #activate
+
+    for i in range(A.shape[1]):
+        Y_prediction[0, i] = np.where(A[0, i] > 0.5, 1, 0) #put 1s where it's likely, 0 where it isn't
+    assert (Y_prediction.shape == (1, m))
+    return Y_prediction
+
+def model(x_train, y_train, x_test, y_test, num_iterations = 2000, step_size = 0.5, print_steps = 100):
+    weights, bias = initialize_w_zeroes(x_train.shape[0])
+    weights, bias, dw, db, costs = optimize(weights, bias, x_train, y_train, num_iterations, log_cost, step_size, print_steps)
+    y_predictions_test = predict(weights, bias, x_test)
+    y_predictions_train = predict(weights, bias, x_train)
+    print("training accuracy: {} %".format(100 - np.mean(np.abs(y_predictions_train - y_train)) * 100))
+    print("testing accuracty: {} %".format(100 - np.mean(np.abs(y_predictions_test - y_test)) * 100))
+    d = {"costs": costs,
+         "y_predictions_test": y_predictions_test,
+         "y_predictions_train": y_predictions_train,
+         "weights": weights,
+         "bias": bias,
+         "step_size": step_size,
+         "num_iterations": num_iterations}
+    return d
 
 
 
+
+x_train, y_train, x_test, y_test, classes = load_dataset() #using default
+train_set_x, test_set_x = preprocess(x_train, x_test)
