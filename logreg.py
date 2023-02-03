@@ -40,7 +40,7 @@ def sigmoid(arr):
     return sig
 
 def initialize_w_zeroes(dim): #for most networks you would init with random values
-    zeroes = np.zeros((dim))
+    zeroes = np.zeros((dim, 1))
     b = 0
     assert(zeroes.shape == (dim, 1))
     assert(isinstance(b, float) or isinstance(b, int)) #i don't like python.
@@ -89,39 +89,38 @@ def optimize(weights, bias, dataX, dataY, num_iterations, cost_fn, step_size, pr
 
 
 
-def predict(w, b, dataX):
+def predict(weights, bias, dataX):
     '''
     use the logistic regression to classify an image
     '''
-    m = dataX.shape[1]
-    Y_prediction = np.zeros()
+    dim = dataX.shape[1]
+    Y_prediction = np.zeros((1, dim))
     weights = weights.reshape(dataX.shape[0], 1) #reshape for application
 
-    A = sigmoid(np.dot(weights.T, dataX) + b) #activate
+    A = sigmoid(np.dot(weights.T, dataX) + bias) #activate
 
     for i in range(A.shape[1]):
         Y_prediction[0, i] = np.where(A[0, i] > 0.5, 1, 0) #put 1s where it's likely, 0 where it isn't
-    assert (Y_prediction.shape == (1, m))
+    assert (Y_prediction.shape == (1, dim))
     return Y_prediction
 
 def model(x_train, y_train, x_test, y_test, num_iterations = 2000, step_size = 0.5, print_steps = 100):
     weights, bias = initialize_w_zeroes(x_train.shape[0])
-    weights, bias, dw, db, costs = optimize(weights, bias, x_train, y_train, num_iterations, log_cost, step_size, print_steps)
-    y_predictions_test = predict(weights, bias, x_test)
-    y_predictions_train = predict(weights, bias, x_train)
+    w, b, dw, db, costs = optimize(weights, bias, x_train, y_train, num_iterations, log_cost, step_size, print_steps)
+    y_predictions_test = predict(w, b, x_test)
+    y_predictions_train = predict(w, b, x_train)
     print("training accuracy: {} %".format(100 - np.mean(np.abs(y_predictions_train - y_train)) * 100))
     print("testing accuracty: {} %".format(100 - np.mean(np.abs(y_predictions_test - y_test)) * 100))
     d = {"costs": costs,
          "y_predictions_test": y_predictions_test,
          "y_predictions_train": y_predictions_train,
-         "weights": weights,
-         "bias": bias,
+         "w": w,
+         "b": b,
          "step_size": step_size,
          "num_iterations": num_iterations}
     return d
 
-
-
-
 x_train, y_train, x_test, y_test, classes = load_dataset() #using default
-train_set_x, test_set_x = preprocess(x_train, x_test)
+proc_x_train, proc_x_test = preprocess(x_train, x_test)
+
+d = model(proc_x_train, y_train, proc_x_test, y_test, step_size=0.005)
