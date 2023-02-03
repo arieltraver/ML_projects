@@ -43,9 +43,11 @@ def sigmoid(arr):
     sig = 1 / (1 + np.exp(-arr)) #numpy exp acts on the entire array
     return sig
 
-
-
-
-
+def initialize_w_zeroes(dim): #for most networks you would init with random values
+    zeroes = np.zeros((dim))
+    b = 0
+    assert(zeroes.shape == (dim, 1))
+    assert(isinstance(b, float) or isinstance(b, int)) #i don't like python.
+    return zeroes, b
 
 
