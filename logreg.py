@@ -123,4 +123,7 @@ def model(x_train, y_train, x_test, y_test, num_iterations = 2000, step_size = 0
 x_train, y_train, x_test, y_test, classes = load_dataset() #using default
 proc_x_train, proc_x_test = preprocess(x_train, x_test)
 
-d = model(proc_x_train, y_train, proc_x_test, y_test, step_size=0.005)
+d = model(proc_x_train, y_train, proc_x_test, y_test, step_size=0.005, print_steps = 1000)
+d2 = model(proc_x_train, y_train, proc_x_test, y_test, num_iterations=10000, step_size=0.002, print_steps=1000) 
+#achieves 70 percent no matter what. overfit? not enough data?
+#maybe try cross training...? 
