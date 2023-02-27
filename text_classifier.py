@@ -1,14 +1,13 @@
 #text classification
 #tutorial: https://pytorch.org/tutorials/beginner/text_sentiment_ngrams_tutorial.html
 
-
+import time
 import torch
 from torchtext.datasets import AG_NEWS #dataset to use
 from torchtext.data.utils import get_tokenizer #links text -> words
 from torchtext.vocab import build_vocab_from_iterator #develops a vocabulary from the data
 from torch.utils.data import DataLoader 
 from torch import nn
-
 
 tokenizer = get_tokenizer('basic_english') #recognize english words
 train_iter = iter(AG_NEWS(split='train'))
@@ -65,4 +64,12 @@ class TextClassificationModel(nn.Model): #the model to be trained
     def forward(self, text, offsets):
         embedded = self.embedding(text, offsets)
         return self.fc(embedded) #apply the linear transformation
+
+train_iter = AG_NEWS(split='train')
+num_class = len(set([label for (label, text) in train_iter ])) #four categories in AG_NEWS
+print(num_class)
+vocab_size = len(vocab)
+emsize = 64
+model = TextClassificationModel(vocab_size, emsize, num_class).to(device)
+
 
