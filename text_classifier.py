@@ -53,6 +53,7 @@ class TextClassificationModel(nn.Model): #the model to be trained
 #instance variables: vocab_size, embed_dim (dimensions of embedding vectors), num_class (how many categories)
     def __init__(self, vocab_size, embed_dim, num_class):
         super(TextClassificationModel, self).__init__()
+        #EmbeddingBag: computes the mean value of embedding vectors without actually creating them
         self.embedding = nn.EmbeddingBag(vocab_size, embed_dim, sparse=True) #turn words into informational vectors
         self.fc = nn.Linear(embed_dim, num_class) #applies a linear transformation to the oncoming data
         self.init_weights()
@@ -65,4 +66,3 @@ class TextClassificationModel(nn.Model): #the model to be trained
         embedded = self.embedding(text, offsets)
         return self.fc(embedded) #apply the linear transformation
 
-#AG news has 4 classes
