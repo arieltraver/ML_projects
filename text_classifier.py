@@ -47,7 +47,7 @@ def collate_batch(batch):
     text_list = torch.cat(text_list) #concatenate everything into a single tensor
     return label_list.to(device), text_list.to(device), offsets.to(device) #convert to gpu/cpu and return
 
-class TextClassificationModel(nn.Model): #the model to be trained
+class TextClassificationModel(nn.Module): #the model to be trained
 
 #instance variables: vocab_size, embed_dim (dimensions of embedding vectors), num_class (how many categories)
     def __init__(self, vocab_size, embed_dim, num_class):
